@@ -17,11 +17,9 @@ import java.util.Set;
 
 
 /**
- * 敏感词库初始化
- *
- * @author AlanLee
- *
- */
+ * @description:
+ * @author: MoXingwang 2019-07-29 13:09
+ **/
 public class SensitiveWordInit
 {
     /**

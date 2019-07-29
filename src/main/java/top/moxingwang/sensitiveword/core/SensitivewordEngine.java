@@ -4,18 +4,11 @@ package top.moxingwang.sensitiveword.core;
  * @description:
  * @author: MoXingwang 2019-07-29 13:09
  **/
-
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * 敏感词过滤工具类
- *
- * @author AlanLee
- *
- */
 public class SensitivewordEngine
 {
     /**

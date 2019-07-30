@@ -5,12 +5,11 @@ package top.moxingwang.sensitiveword.core;
  * @author: MoXingwang 2019-07-29 13:09
  **/
 
-import com.fasterxml.jackson.databind.type.MapType;
-
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SensitivewordEngine {
+    private static final String WORD_END_FLAG = "ISEND";
     /**
      * 敏感词库,可以存储多个业务场景(桶)
      */
@@ -158,27 +157,32 @@ public class SensitivewordEngine {
     /**
      * 封装敏感词库
      */
-    @SuppressWarnings("rawtypes")
-    private void addSensitiveWordToHashMap(Integer bucketId, Set<String> keyWordSet) {
-        Map<String, Map<String, String>> sensitiveWordMap = lexicon.get(bucketId);
+    private void add(Integer bucketId, Set<String> keyWordSet) {
+        Map<String, Map> sensitiveWordMap = lexicon.get(bucketId);
         if (sensitiveWordMap == null) {
             sensitiveWordMap = new HashMap<>(keyWordSet.size());
             lexicon.put(bucketId, sensitiveWordMap);
         }
 
         for (String str : keyWordSet) {
+            Map nowMap = sensitiveWordMap;
             for (int i = 0; i < str.length(); i++) {
                 char keyChar = str.charAt(i);
-                Map wordMap = sensitiveWordMap.get(keyChar);
-                if (null == wordMap) {
+                Object wordMap = nowMap.get(keyChar);
+                if (null != wordMap) {
+                    nowMap = (Map) wordMap;
+                } else {
+                    Map newWorMap = new HashMap<>();
+                    newWorMap.put(WORD_END_FLAG, "0");
 
+                    nowMap.put(keyChar, newWorMap);
+                    nowMap = newWorMap;
+                }
+
+                if (i == str.length() - 1) {
+                    nowMap.put(WORD_END_FLAG, "1");
                 }
             }
         }
-
-
-        lexicon.put(bucketId, sensitiveWordMap);
     }
-
-
 }

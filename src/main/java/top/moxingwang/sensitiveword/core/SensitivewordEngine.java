@@ -5,6 +5,8 @@ package top.moxingwang.sensitiveword.core;
  * @author: MoXingwang 2019-07-29 13:09
  **/
 
+import com.fasterxml.jackson.databind.type.MapType;
+
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -12,7 +14,7 @@ public class SensitivewordEngine {
     /**
      * 敏感词库,可以存储多个业务场景(桶)
      */
-    public static Map<Integer, Map<String, String>> lexicon = new ConcurrentHashMap<>();
+    public static Map<Integer, Map> lexicon = new ConcurrentHashMap<>();
 
     /**
      * 只过滤最小敏感词
@@ -158,41 +160,22 @@ public class SensitivewordEngine {
      */
     @SuppressWarnings("rawtypes")
     private void addSensitiveWordToHashMap(Integer bucketId, Set<String> keyWordSet) {
-        // 初始化HashMap对象并控制容器的大小
-        HashMap<String, String> sensitiveWordMap = new HashMap(keyWordSet.size());
-        // 敏感词
-        String key = null;
-        // 用来按照相应的格式保存敏感词库数据
-        Map nowMap = null;
-        // 用来辅助构建敏感词库
-        Map<String, String> newWorMap = null;
-        // 使用一个迭代器来循环敏感词集合
-        Iterator<String> iterator = keyWordSet.iterator();
-        while (iterator.hasNext()) {
-            key = iterator.next();
-            // 等于敏感词库，HashMap对象在内存中占用的是同一个地址，所以此nowMap对象的变化，sensitiveWordMap对象也会跟着改变
-            nowMap = sensitiveWordMap;
-            for (int i = 0; i < key.length(); i++) {
-                // 截取敏感词当中的字，在敏感词库中字为HashMap对象的Key键值
-                char keyChar = key.charAt(i);
+        Map<String, Map<String, String>> sensitiveWordMap = lexicon.get(bucketId);
+        if (sensitiveWordMap == null) {
+            sensitiveWordMap = new HashMap<>(keyWordSet.size());
+            lexicon.put(bucketId, sensitiveWordMap);
+        }
 
-                // 判断这个字是否存在于敏感词库中
-                Object wordMap = nowMap.get(keyChar);
-                if (wordMap != null) {
-                    nowMap = (Map) wordMap;
-                } else {
-                    newWorMap = new HashMap<String, String>();
-                    newWorMap.put("isEnd", "0");
-                    nowMap.put(keyChar, newWorMap);
-                    nowMap = newWorMap;
-                }
+        for (String str : keyWordSet) {
+            for (int i = 0; i < str.length(); i++) {
+                char keyChar = str.charAt(i);
+                Map wordMap = sensitiveWordMap.get(keyChar);
+                if (null == wordMap) {
 
-                // 如果该字是当前敏感词的最后一个字，则标识为结尾字
-                if (i == key.length() - 1) {
-                    nowMap.put("isEnd", "1");
                 }
             }
         }
+
 
         lexicon.put(bucketId, sensitiveWordMap);
     }

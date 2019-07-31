@@ -14,17 +14,14 @@ import java.util.Set;
 public class Test {
     public static void main(String[] args) {
         Set<String> list1 = new HashSet<>();
-        list1.add("我的");
-        list1.add("我的1");
-        list1.add("我的3");
-        list1.add("我的543");
+        for (int i = 0; i < 100000; i++) {
+            list1.add(i+"铭感词"+i);
+        }
 
 
         Set<String> list2 = new HashSet<>();
         list2.add("你的");
-        list2.add("你的1");
-        list2.add("你的3");
-        list2.add("你的543");
+
 
 
         SensitivewordEngine.add(1,list1);

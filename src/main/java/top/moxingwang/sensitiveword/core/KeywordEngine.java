@@ -83,6 +83,13 @@ public class KeywordEngine {
     }
 
     /**
+     * 删除关键词
+     */
+    public static void delete(Integer bucketId, String keyword) {
+
+    }
+
+    /**
      * 封装敏感词库
      */
     public static void add(Integer bucketId, Set<String> keyWordSet) {

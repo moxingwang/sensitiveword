@@ -5,6 +5,8 @@ package top.moxingwang.sensitiveword.core;
  * @author: MoXingwang 2019-07-29 13:09
  **/
 
+import com.alibaba.fastjson.JSON;
+
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -87,7 +89,7 @@ public class KeywordEngine {
         if (nowMap == null || keyword == null) {
             return;
         }
-        List<Map> layer = new ArrayList<>();
+        LinkedList<Map> layer = new LinkedList<>();
         layer.add(nowMap);
 
 
@@ -103,20 +105,35 @@ public class KeywordEngine {
 
         //词存在
         int length = keyword.length();
-        if (layer.size() == length && "1".equals(layer.get(length - 1).get(WORD_END_FLAG))) {
-            for (int i = keyword.length() - 1; i > 0; i--) {
-                Map tmp = layer.get(i);
-                if (tmp.keySet().size() == 2) {
-                    continue;
-                } else {
-                    tmp.remove(keyword.charAt(i));
+        if (layer.size()-1 == length && "1".equals(layer.get(length).get(WORD_END_FLAG))) {
+//            layer.get(length-1).remove(keyword.charAt(length-1));
+            layer.pollLast();
+//            layer.pollLast();
+
+            int stopIndex = length-1;
+            for (int i = layer.size()-1; i >=0; i--) {
+                Map tmp = (Map) layer.get(i).get(keyword.charAt(i));
+                if("0".equals(tmp.get(WORD_END_FLAG)) && hashOneNode(tmp)){
+                    stopIndex--;
+                }else {
                     break;
                 }
             }
+
+            layer.get(stopIndex).remove(keyword.charAt(stopIndex));
+            System.out.println(stopIndex);
         }
 
         Map<String, Map> nowMap1 = lexicon.get(bucketId);
         System.out.println(2);
+    }
+
+    private static boolean hashOneNode(Map map){
+        int size = map.keySet().size();
+        if(map.get(WORD_END_FLAG) != null){
+            size --;
+        }
+        return size==1;
     }
 
     /**

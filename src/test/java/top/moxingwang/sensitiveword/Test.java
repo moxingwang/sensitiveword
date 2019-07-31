@@ -19,6 +19,7 @@ public class Test {
 
         Set<String> list2 = new HashSet<>();
         list2.add("你的");
+        list2.add("你的是");
 
 
 //        KeywordEngine.add(1, list1);

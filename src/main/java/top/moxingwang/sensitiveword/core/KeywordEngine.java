@@ -87,8 +87,9 @@ public class KeywordEngine {
         if (nowMap == null || keyword == null) {
             return;
         }
-        List<Map> layer = new ArrayList<>(keyword.length());
+        LinkedList<Map> layer = new LinkedList<>();
         layer.add(nowMap);
+
 
         for (int i = 0; i < keyword.length(); i++) {
             char word = keyword.charAt(i);
@@ -106,6 +107,20 @@ public class KeywordEngine {
             }
         }
 
+        //词存在
+        if (layer.size() == keyword.length()) {
+            for (int i = 0; i < keyword.length(); i++) {
+                Map tmp =  layer.pollLast();
+
+            }
+
+            while ((tmp = layer.pollLast()) != null) {
+                if ("1".equals(nowMap.get(WORD_END_FLAG))) {
+
+                }
+            }
+
+        }
     }
 
     /**

@@ -24,7 +24,7 @@ public class Test {
 
 //        KeywordEngine.add(1, list1);
         KeywordEngine.add(2, list2);
-        KeywordEngine.remove(2, "你的");
+        KeywordEngine.remove(2, "你的是");
         System.out.println(1);
 
 //        System.out.println(KeywordEngine.containWord(2,"我"));

@@ -5,8 +5,6 @@ package top.moxingwang.sensitiveword.core;
  * @author: MoXingwang 2019-07-29 13:09
  **/
 
-import com.alibaba.fastjson.JSON;
-
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -89,33 +87,51 @@ public class KeywordEngine {
         if (nowMap == null || keyword == null) {
             return;
         }
-        LinkedList<Map> layer = new LinkedList<>();
-        layer.add(nowMap);
 
+        int length = keyword.length();
 
-        for (int i = 0; i < keyword.length(); i++) {
+        LinkedList<Map> linkedList = new LinkedList<>();
+        for (int i = 0; i < length; i++) {
             char word = keyword.charAt(i);
             nowMap = (Map) nowMap.get(word);
+
             if (nowMap != null) {
-                layer.add(nowMap);
+                Map charMap = new HashMap();
+                charMap.put(word, nowMap);
+                linkedList.add(charMap);
             } else {
                 break;
             }
         }
 
-        //词存在
-        检查有否节点，是否需要取消当前节点的isend
+        Map lastCharMap = (Map) linkedList.getLast().get(keyword.charAt(length - 1));
+        if (realNodeSize(lastCharMap) == 1) {
+            if ("1".equals(lastCharMap.get(WORD_END_FLAG))) {
+                lastCharMap.put(WORD_END_FLAG, "0");
+            }
+        } else {
+            int stopIndex = linkedList.size();
+            for (int i = linkedList.size() - 2; i >= 0; i--) {
+                Map tmp = linkedList.get(i);
+                if ("1".equals(tmp.get(WORD_END_FLAG)) || realNodeSize(tmp) > 1) {
+                    break;
+                } else {
+                    stopIndex--;
+                }
+            }
 
-        Map<String, Map> nowMap1 = lexicon.get(bucketId);
-        System.out.println(2);
+            Map canStopMap = (Map) linkedList.get(stopIndex).get(keyword.charAt(stopIndex));
+            canStopMap.remove(keyword.charAt(stopIndex + 1));
+            lastCharMap.put(WORD_END_FLAG, "1");
+        }
     }
 
-    private static boolean hashOneNode(Map map){
+    private static int realNodeSize(Map map) {
         int size = map.keySet().size();
-        if(map.get(WORD_END_FLAG) != null){
-            size --;
+        if (map.get(WORD_END_FLAG) != null) {
+            size--;
         }
-        return size==1;
+        return size;
     }
 
     /**

@@ -1,3 +1,4 @@
+/*
 package top.moxingwang.sensitiveword;
 
 import org.junit.Test;
@@ -34,3 +35,4 @@ public class EngineTest {
         System.out.println(set);
     }
 }
+*/

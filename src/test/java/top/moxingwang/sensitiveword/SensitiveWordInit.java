@@ -1,28 +1,37 @@
+/*
 package top.moxingwang.sensitiveword.core;
 
+*/
 /**
  * @description:
  * @author: MoXingwang 2019-07-29 13:08
- **/
+ **//*
+
 
 import java.util.*;
 
 
+*/
 /**
  * @description:
  * @author: MoXingwang 2019-07-29 13:09
- **/
+ **//*
+
 public class SensitiveWordInit {
-    /**
+    */
+/**
      * 敏感词库
-     */
+     *//*
+
     public HashMap sensitiveWordMap;
 
-    /**
+    */
+/**
      * 初始化敏感词
      *
      * @return
-     */
+     *//*
+
     public Map initKeyWord(List<SensitiveWord> sensitiveWords) {
         try {
             // 从敏感词集合对象中取出敏感词并封装到Set集合中
@@ -38,11 +47,13 @@ public class SensitiveWordInit {
         return sensitiveWordMap;
     }
 
-    /**
+    */
+/**
      * 封装敏感词库
      *
      * @param keyWordSet
-     */
+     *//*
+
     @SuppressWarnings("rawtypes")
     private void addSensitiveWordToHashMap(Set<String> keyWordSet) {
         // 初始化HashMap对象并控制容器的大小
@@ -84,3 +95,4 @@ public class SensitiveWordInit {
         }
     }
 }
+*/

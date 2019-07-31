@@ -14,6 +14,7 @@ public class Test {
         Set<String> list1 = new HashSet<>();
         list1.add("回东");
         list1.add("我的");
+        list1.add("我门的");
         list1.add("的");
 
         Set<String> list2 = new HashSet<>();
@@ -23,7 +24,7 @@ public class Test {
         KeywordEngine.add(1, list1);
         KeywordEngine.add(2, list2);
 
-        System.out.println(KeywordEngine.containWord(1,"我"));
+        System.out.println(KeywordEngine.containWord(2,"我"));
         System.out.println(KeywordEngine.containWord(1,"我的"));
         System.out.println(KeywordEngine.listWord(1, "我的哈的哈返我的543回东萨"));
         System.out.println(KeywordEngine.listWord(2, "我的哈哈返我的543回东萨"));

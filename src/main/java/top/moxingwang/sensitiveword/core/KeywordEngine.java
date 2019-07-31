@@ -5,10 +5,7 @@ package top.moxingwang.sensitiveword.core;
  * @author: MoXingwang 2019-07-29 13:09
  **/
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class KeywordEngine {
@@ -53,7 +50,7 @@ public class KeywordEngine {
     /**
      * 检查敏感词数量
      */
-    private static int checkWord(Integer bucketId, String txt, int beginIndex) {
+    private static int checkWord(Integer bucketId, String keyword, int beginIndex) {
         Map<String, Map> keyWordMap = lexicon.get(bucketId);
         if (keyWordMap == null) {
             return 0;
@@ -63,8 +60,8 @@ public class KeywordEngine {
         int matchFlag = 0;
 
         Map nowMap = keyWordMap;
-        for (int i = beginIndex; i < txt.length(); i++) {
-            char word = txt.charAt(i);
+        for (int i = beginIndex; i < keyword.length(); i++) {
+            char word = keyword.charAt(i);
             nowMap = (Map) nowMap.get(word);
             if (nowMap != null) {
                 matchFlag++;
@@ -85,7 +82,29 @@ public class KeywordEngine {
     /**
      * 删除关键词
      */
-    public static void delete(Integer bucketId, String keyword) {
+    public static void remove(Integer bucketId, String keyword) {
+        Map<String, Map> nowMap = lexicon.get(bucketId);
+        if (nowMap == null || keyword == null) {
+            return;
+        }
+        List<Map> layer = new ArrayList<>(keyword.length());
+        layer.add(nowMap);
+
+        for (int i = 0; i < keyword.length(); i++) {
+            char word = keyword.charAt(i);
+            nowMap = (Map) nowMap.get(word);
+            if (nowMap != null) {
+                layer.add(nowMap);
+
+//                matchFlag++;
+//                if ("1".equals(nowMap.get(WORD_END_FLAG))) {
+//                    flag = true;
+//                    break;
+//                }
+            } else {
+                break;
+            }
+        }
 
     }
 

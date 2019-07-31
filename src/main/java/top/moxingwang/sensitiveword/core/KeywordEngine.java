@@ -87,7 +87,7 @@ public class KeywordEngine {
         if (nowMap == null || keyword == null) {
             return;
         }
-        LinkedList<Map> layer = new LinkedList<>();
+        List<Map> layer = new ArrayList<>();
         layer.add(nowMap);
 
 
@@ -96,31 +96,27 @@ public class KeywordEngine {
             nowMap = (Map) nowMap.get(word);
             if (nowMap != null) {
                 layer.add(nowMap);
-
-//                matchFlag++;
-//                if ("1".equals(nowMap.get(WORD_END_FLAG))) {
-//                    flag = true;
-//                    break;
-//                }
             } else {
                 break;
             }
         }
 
         //词存在
-        if (layer.size() == keyword.length()) {
-            for (int i = 0; i < keyword.length(); i++) {
-                Map tmp =  layer.pollLast();
-
-            }
-
-            while ((tmp = layer.pollLast()) != null) {
-                if ("1".equals(nowMap.get(WORD_END_FLAG))) {
-
+        int length = keyword.length();
+        if (layer.size() == length && "1".equals(layer.get(length - 1).get(WORD_END_FLAG))) {
+            for (int i = keyword.length() - 1; i > 0; i--) {
+                Map tmp = layer.get(i);
+                if (tmp.keySet().size() == 2) {
+                    continue;
+                } else {
+                    tmp.remove(keyword.charAt(i));
+                    break;
                 }
             }
-
         }
+
+        Map<String, Map> nowMap1 = lexicon.get(bucketId);
+        System.out.println(2);
     }
 
     /**

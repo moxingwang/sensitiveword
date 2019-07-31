@@ -104,25 +104,7 @@ public class KeywordEngine {
         }
 
         //词存在
-        int length = keyword.length();
-        if (layer.size()-1 == length && "1".equals(layer.get(length).get(WORD_END_FLAG))) {
-//            layer.get(length-1).remove(keyword.charAt(length-1));
-            layer.pollLast();
-//            layer.pollLast();
-
-            int stopIndex = length-1;
-            for (int i = layer.size()-1; i >=0; i--) {
-                Map tmp = (Map) layer.get(i).get(keyword.charAt(i));
-                if("0".equals(tmp.get(WORD_END_FLAG)) && hashOneNode(tmp)){
-                    stopIndex--;
-                }else {
-                    break;
-                }
-            }
-
-            layer.get(stopIndex).remove(keyword.charAt(stopIndex));
-            System.out.println(stopIndex);
-        }
+        检查有否节点，是否需要取消当前节点的isend
 
         Map<String, Map> nowMap1 = lexicon.get(bucketId);
         System.out.println(2);

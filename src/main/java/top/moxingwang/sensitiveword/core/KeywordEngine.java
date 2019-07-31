@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class SensitivewordEngine {
+public class KeywordEngine {
     private static final String WORD_END_FLAG = "ISEND";
     /**
      * 敏感词库,可以存储多个业务场景(桶)
@@ -19,38 +19,12 @@ public class SensitivewordEngine {
     public static Map<Integer, Map> lexicon = new ConcurrentHashMap<>();
 
     /**
-     * 只过滤最小敏感词
-     */
-    public static int minMatchTYpe = 1;
-
-    /**
-     * 过滤所有敏感词
-     */
-    public static int maxMatchType = 2;
-
-    /**
-     * 敏感词库敏感词数量
-     *
-     * @return
-     */
-    public static int getWordSize(String bucketId) {
-        if (lexicon.get(bucketId) == null) {
-            return 0;
-        }
-        return lexicon.get(bucketId).size();
-    }
-
-    /**
      * 是否包含敏感词
-     *
-     * @param txt
-     * @param matchType
-     * @return
      */
-    public static boolean isContaintSensitiveWord(Integer bucketId, String txt, int matchType) {
+    public static boolean containWord(Integer bucketId, String txt) {
         boolean flag = false;
         for (int i = 0; i < txt.length(); i++) {
-            int matchFlag = checkSensitiveWord(bucketId, txt, i, matchType);
+            int matchFlag = checkWord(bucketId, txt, i);
             if (matchFlag > 0) {
                 flag = true;
             }
@@ -60,45 +34,35 @@ public class SensitivewordEngine {
 
     /**
      * 获取敏感词内容
-     *
-     * @param txt
-     * @param matchType
-     * @return 敏感词内容
      */
-    public static Set<String> getSensitiveWord(Integer bucketId, String txt, int matchType) {
-        Set<String> sensitiveWordList = new HashSet<String>();
+    public static Set<String> listWord(Integer bucketId, String txt) {
+        Set<String> keyWordList = new HashSet<String>();
 
         for (int i = 0; i < txt.length(); i++) {
-            int length = checkSensitiveWord(bucketId, txt, i, matchType);
+            int length = checkWord(bucketId, txt, i);
             if (length > 0) {
-                // 将检测出的敏感词保存到集合中
-                sensitiveWordList.add(txt.substring(i, i + length));
+                keyWordList.add(txt.substring(i, i + length));
                 i = i + length - 1;
             }
         }
 
-        return sensitiveWordList;
+        return keyWordList;
     }
 
 
     /**
      * 检查敏感词数量
-     *
-     * @param txt
-     * @param beginIndex
-     * @param matchType
-     * @return
      */
-    public static int checkSensitiveWord(Integer bucketId, String txt, int beginIndex, int matchType) {
-        Map<String, Map> sensitiveWordMap = lexicon.get(bucketId);
-        if (sensitiveWordMap == null) {
+    private static int checkWord(Integer bucketId, String txt, int beginIndex) {
+        Map<String, Map> keyWordMap = lexicon.get(bucketId);
+        if (keyWordMap == null) {
             return 0;
         }
 
         boolean flag = false;
         int matchFlag = 0;
 
-        Map nowMap = sensitiveWordMap;
+        Map nowMap = keyWordMap;
         for (int i = beginIndex; i < txt.length(); i++) {
             char word = txt.charAt(i);
             nowMap = (Map) nowMap.get(word);
@@ -106,9 +70,7 @@ public class SensitivewordEngine {
                 matchFlag++;
                 if ("1".equals(nowMap.get(WORD_END_FLAG))) {
                     flag = true;
-                    if (SensitivewordEngine.minMatchTYpe == matchType) {
-                        break;
-                    }
+                    break;
                 }
             } else {
                 break;
@@ -124,14 +86,14 @@ public class SensitivewordEngine {
      * 封装敏感词库
      */
     public static void add(Integer bucketId, Set<String> keyWordSet) {
-        Map<String, Map> sensitiveWordMap = lexicon.get(bucketId);
-        if (sensitiveWordMap == null) {
-            sensitiveWordMap = new HashMap<>(keyWordSet.size());
-            lexicon.put(bucketId, sensitiveWordMap);
+        Map<String, Map> keyWordMap = lexicon.get(bucketId);
+        if (keyWordMap == null) {
+            keyWordMap = new HashMap<>(keyWordSet.size());
+            lexicon.put(bucketId, keyWordMap);
         }
 
         for (String str : keyWordSet) {
-            Map nowMap = sensitiveWordMap;
+            Map nowMap = keyWordMap;
             for (int i = 0; i < str.length(); i++) {
                 char keyChar = str.charAt(i);
                 Object wordMap = nowMap.get(keyChar);

@@ -1,6 +1,6 @@
 package top.moxingwang.sensitiveword;
 
-import top.moxingwang.sensitiveword.core.SensitivewordEngine;
+import top.moxingwang.sensitiveword.core.KeywordEngine;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,12 +20,11 @@ public class Test {
         list2.add("你的");
 
 
-        SensitivewordEngine.add(1, list1);
-        SensitivewordEngine.add(2, list2);
+        KeywordEngine.add(1, list1);
+        KeywordEngine.add(2, list2);
 
-        System.out.println(SensitivewordEngine.getSensitiveWord(1, "我的哈哈返我的543回东萨", 1));
-
-        System.out.println(SensitivewordEngine.getSensitiveWord(2, "我的哈哈返我的543回东萨", 1));
+        System.out.println(KeywordEngine.listWord(1, "我的哈的哈返我的543回东萨"));
+        System.out.println(KeywordEngine.listWord(2, "我的哈哈返我的543回东萨"));
 
     }
 }

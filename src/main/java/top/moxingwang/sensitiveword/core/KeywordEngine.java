@@ -82,7 +82,7 @@ public class KeywordEngine {
     /**
      * 删除关键词
      */
-    public static void remove(Integer bucketId, String keyword) {
+    public static synchronized void remove(Integer bucketId, String keyword) {
         Map<String, Map> nowMap = lexicon.get(bucketId);
         if (nowMap == null || keyword == null) {
             return;
@@ -137,7 +137,7 @@ public class KeywordEngine {
     /**
      * 封装敏感词库
      */
-    public static void add(Integer bucketId, Set<String> keyWordSet) {
+    public static synchronized void add(Integer bucketId, Set<String> keyWordSet) {
         Map<String, Map> keyWordMap = lexicon.get(bucketId);
         if (keyWordMap == null) {
             keyWordMap = new HashMap<>(keyWordSet.size());
